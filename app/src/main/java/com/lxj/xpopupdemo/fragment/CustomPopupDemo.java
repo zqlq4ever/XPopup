@@ -4,18 +4,24 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.lxj.easyadapter.EasyAdapter;
+
+import com.lxj.easyadapter.CommonAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.animator.PopupAnimator;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.core.CenterPopupView;
 import com.lxj.xpopup.enums.PopupAnimation;
+import com.lxj.xpopup.interfaces.XPopupCallback;
+import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopupdemo.R;
+
 import java.util.ArrayList;
 
 /**
@@ -31,7 +37,7 @@ public class CustomPopupDemo extends BaseFragment {
         return R.layout.fragment_all_animator_demo;
     }
 
-    PopupAnimation[] data;
+    PopupAnimation[] datas;
 
     @Override
     public void init(View view) {
@@ -39,8 +45,8 @@ public class CustomPopupDemo extends BaseFragment {
         temp = view.findViewById(R.id.temp);
         temp.setText("演示如何自定义弹窗，并给自定义的弹窗应用不同的内置动画方案；你也可以为自己的弹窗编写自定义的动画。");
 
-        data = PopupAnimation.values();
-        spinner.setAdapter(new ArrayAdapter<PopupAnimation>(getContext(), android.R.layout.simple_list_item_1, data));
+        datas = PopupAnimation.values();
+        spinner.setAdapter(new ArrayAdapter<PopupAnimation>(getContext(), android.R.layout.simple_list_item_1, datas));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -49,7 +55,7 @@ public class CustomPopupDemo extends BaseFragment {
                     @Override
                     public void run() {
                         new XPopup.Builder(getContext())
-                                .popupAnimation(data[position])
+                                .popupAnimation(datas[position])
                                 .autoOpenSoftInput(true)
                                 .asCustom(new CustomPopup(getContext()))
                                 .show();
@@ -126,7 +132,7 @@ public class CustomPopupDemo extends BaseFragment {
                 data.add("" + i);
             }
 
-            recyclerView.setAdapter(new EasyAdapter<String>(data, android.R.layout.simple_list_item_1) {
+            recyclerView.setAdapter(new CommonAdapter<String>(android.R.layout.simple_list_item_1, data) {
                 @Override
                 protected void bind(@NonNull ViewHolder holder, @NonNull String s, int position) {
                     holder.setText(android.R.id.text1, s);

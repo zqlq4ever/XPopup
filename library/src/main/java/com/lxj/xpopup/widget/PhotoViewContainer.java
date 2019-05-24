@@ -1,5 +1,6 @@
 package com.lxj.xpopup.widget;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -12,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.lxj.xpopup.interfaces.OnDragChangeListener;
-import com.lxj.xpopup.photoview.PhotoView;
 
 /**
  * wrap ViewPager, process drag event.
@@ -20,17 +20,22 @@ import com.lxj.xpopup.photoview.PhotoView;
 public class PhotoViewContainer extends FrameLayout {
     private static final String TAG = "PhotoViewContainer";
     private ViewDragHelper dragHelper;
-    public ViewPager viewPager;
+    private ViewPager viewPager;
+    private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     private int HideTopThreshold = 80;
     private int maxOffset;
     private OnDragChangeListener dragChangeListener;
-    public boolean isReleasing = false;
+    public int blackColor = Color.rgb(32, 36, 46);
+    public boolean isReleaseing = false;
+
     public PhotoViewContainer(@NonNull Context context) {
         this(context, null);
     }
+
     public PhotoViewContainer(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public PhotoViewContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -82,42 +87,32 @@ public class PhotoViewContainer extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    private boolean isTopOrBottomEnd(){
-        PhotoView photoView = getCurrentPhotoView();
-        return photoView!=null && (photoView.attacher.isTopEnd || photoView.attacher.isBottomEnd);
-    }
-
-    private PhotoView getCurrentPhotoView(){
-        return  (PhotoView) viewPager.getChildAt(viewPager.getCurrentItem());
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean result = dragHelper.shouldInterceptTouchEvent(ev);
-        if (ev.getPointerCount() > 1 && ev.getAction()==MotionEvent.ACTION_MOVE) return false;
-        if (isTopOrBottomEnd()  && isVertical)return true;
-        return result && isVertical;
+        if (ev.getPointerCount() > 1) return false;
+        return dragHelper.shouldInterceptTouchEvent(ev) && isVertical;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (ev.getPointerCount() > 1 ) return false;
-        try {
-            dragHelper.processTouchEvent(ev);
-            return true;
-        }catch (Exception e){}
+        dragHelper.processTouchEvent(ev);
         return true;
     }
 
     ViewDragHelper.Callback cb = new ViewDragHelper.Callback() {
         @Override
         public boolean tryCaptureView(@NonNull View view, int i) {
-            return !isReleasing;
+            return !isReleaseing;
         }
 
         @Override
         public int getViewVerticalDragRange(@NonNull View child) {
             return 1;
+        }
+
+        @Override
+        public int getViewHorizontalDragRange(@NonNull View child) {
+            return 0;
         }
 
         @Override
@@ -142,6 +137,7 @@ public class PhotoViewContainer extends FrameLayout {
             viewPager.setScaleY(pageScale);
             changedView.setScaleX(pageScale);
             changedView.setScaleY(pageScale);
+            applyBgAnimation(fraction);
             if (dragChangeListener != null) {
                 dragChangeListener.onDragChange(dy, pageScale, fraction);
             }
@@ -169,6 +165,10 @@ public class PhotoViewContainer extends FrameLayout {
         }
     }
 
+    private void applyBgAnimation(float fraction) {
+        setBackgroundColor((Integer) argbEvaluator.evaluate(fraction * .8f, blackColor, Color.TRANSPARENT));
+    }
+
     public int dip2px(float dpValue) {
         float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
@@ -181,6 +181,6 @@ public class PhotoViewContainer extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        isReleasing = false;
+        isReleaseing = false;
     }
 }

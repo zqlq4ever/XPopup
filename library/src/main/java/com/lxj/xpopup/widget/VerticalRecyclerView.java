@@ -1,10 +1,6 @@
 package com.lxj.xpopup.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,5 +32,4 @@ public class VerticalRecyclerView extends RecyclerView {
         decoration.setDrawable(new ColorDrawable(getResources().getColor(R.color._xpopup_list_divider)));
         addItemDecoration(decoration);
     }
-
 }

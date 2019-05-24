@@ -19,13 +19,14 @@ public class AllAnimatorDemo extends BaseFragment {
     protected int getLayoutId() {
         return R.layout.fragment_all_animator_demo;
     }
-    PopupAnimation[] data;
+    PopupAnimation[] datas;
     @Override
     public void init(View view) {
         spinner = view.findViewById(R.id.spinner);
 
-        data = PopupAnimation.values();
-        spinner.setAdapter(new ArrayAdapter<PopupAnimation>(getContext(), android.R.layout.simple_list_item_1, data));
+        datas = PopupAnimation.values();
+        spinner.setAdapter(new ArrayAdapter<PopupAnimation>(getContext(), android.R.layout.simple_list_item_1, datas));
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
@@ -33,7 +34,7 @@ public class AllAnimatorDemo extends BaseFragment {
                     @Override
                     public void run() {
                         new XPopup.Builder(getContext())
-                                .popupAnimation(data[position])
+                                .popupAnimation(datas[position])
                                 .asConfirm("演示应用不同的动画", "你可以为弹窗选择任意一种动画，但这并不必要，因为我已经默认给每种弹窗设定了最佳动画！对于你自定义的弹窗，可以随心选择心仪的动画方案。", null)
                                 .show();
                     }

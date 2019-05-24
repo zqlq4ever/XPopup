@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.lxj.easyadapter.EasyAdapter;
+
+import com.lxj.easyadapter.CommonAdapter;
 import com.lxj.easyadapter.MultiItemTypeAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.R;
@@ -14,6 +16,7 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.lxj.xpopup.widget.CheckView;
+
 import java.util.Arrays;
 
 /**
@@ -44,22 +47,22 @@ public class BottomListPopupView extends BottomPopupView {
             tv_title.setText(title);
         }
 
-        final EasyAdapter<String> adapter = new EasyAdapter<String>(Arrays.asList(data), R.layout._xpopup_adapter_text) {
+        final CommonAdapter<String> adapter = new CommonAdapter<String>(R.layout._xpopup_adapter_text, Arrays.asList(data)) {
             @Override
             protected void bind(@NonNull ViewHolder holder, @NonNull String s, int position) {
                 holder.setText(R.id.tv_text, s);
                 if (iconIds != null && iconIds.length > position) {
-                    holder.getView(R.id.iv_image).setVisibility(VISIBLE);
-                    holder.getView(R.id.iv_image).setBackgroundResource(iconIds[position]);
+                    holder.setVisible(R.id.iv_image, true);
+                    holder.setBackgroundRes(R.id.iv_image, iconIds[position]);
                 }else {
-                    holder.getView(R.id.iv_image).setVisibility(GONE);
+                    holder.setVisible(R.id.iv_image, false);
                 }
 
                 // 对勾View
                 if (checkedPosition != -1) {
-                    holder.getView(R.id.check_view).setVisibility(position == checkedPosition?VISIBLE:GONE);
+                    holder.setVisible(R.id.check_view, position == checkedPosition);
                     holder.<CheckView>getView(R.id.check_view).setColor(XPopup.getPrimaryColor());
-                    holder.<TextView>getView(R.id.tv_text).setTextColor(position==checkedPosition ?
+                    holder.setTextColor(R.id.tv_text, position==checkedPosition ?
                             XPopup.getPrimaryColor() : getResources().getColor(R.color._xpopup_title_color));
                 }
             }
@@ -68,7 +71,7 @@ public class BottomListPopupView extends BottomPopupView {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 if (selectListener != null) {
-                    selectListener.onSelect(position, adapter.getData().get(position));
+                    selectListener.onSelect(position, adapter.getDatas().get(position));
                 }
                 if (checkedPosition!=-1){
                     checkedPosition = position;

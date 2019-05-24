@@ -17,11 +17,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
  * Create by dance, at 2018/12/16
  */
 public class ConfirmPopupView extends CenterPopupView implements View.OnClickListener{
-    OnCancelListener cancelListener;
-    OnConfirmListener confirmListener;
-    TextView tv_title, tv_content, tv_cancel, tv_confirm;
-    String title, content, hint, cancelText, confirmText;
-    boolean isHideCancel = false;
+
     public ConfirmPopupView(@NonNull Context context) {
         super(context);
     }
@@ -31,6 +27,7 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         return R.layout._xpopup_center_impl_confirm;
     }
 
+    TextView tv_title, tv_content, tv_cancel, tv_confirm;
     @Override
     protected void initPopupContent() {
         super.initPopupContent();
@@ -50,12 +47,7 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         if(!TextUtils.isEmpty(content)){
             tv_content.setText(content);
         }
-        if(!TextUtils.isEmpty(cancelText)){
-            tv_cancel.setText(cancelText);
-        }
-        if(!TextUtils.isEmpty(confirmText)){
-            tv_confirm.setText(confirmText);
-        }
+
         if(isHideCancel)tv_cancel.setVisibility(GONE);
     }
 
@@ -64,11 +56,16 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         tv_confirm.setTextColor(XPopup.getPrimaryColor());
     }
 
+    OnCancelListener cancelListener;
+    OnConfirmListener confirmListener;
     public ConfirmPopupView setListener( OnConfirmListener confirmListener,OnCancelListener cancelListener){
         this.cancelListener = cancelListener;
         this.confirmListener = confirmListener;
         return this;
     }
+    String title;
+    String content;
+    String hint;
     public ConfirmPopupView setTitleContent(String title, String content, String hint){
         this.title = title;
         this.content = content;
@@ -76,16 +73,7 @@ public class ConfirmPopupView extends CenterPopupView implements View.OnClickLis
         return this;
     }
 
-    public ConfirmPopupView setCancelText(String cancelText){
-        this.cancelText = cancelText;
-        return this;
-    }
-
-    public ConfirmPopupView setConfirmText(String confirmText){
-        this.confirmText = confirmText;
-        return this;
-    }
-
+    boolean isHideCancel = false;
     public ConfirmPopupView hideCancelBtn(){
         isHideCancel = true;
         return this;

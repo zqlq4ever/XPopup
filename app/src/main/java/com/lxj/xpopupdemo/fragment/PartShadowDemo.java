@@ -1,20 +1,26 @@
 package com.lxj.xpopupdemo.fragment;
 
-
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import com.lxj.easyadapter.EasyAdapter;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.blankj.utilcode.util.ToastUtils;
+import com.lxj.easyadapter.CommonAdapter;
 import com.lxj.easyadapter.MultiItemTypeAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupPosition;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.lxj.xpopup.interfaces.XPopupCallback;
+import com.lxj.xpopup.widget.PopupDrawerLayout;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
 import com.lxj.xpopupdemo.R;
 import com.lxj.xpopupdemo.custom.CustomDrawerPopupView;
 import com.lxj.xpopupdemo.custom.CustomPartShadowPopupView;
+
 import java.util.ArrayList;
 
 /**
@@ -50,7 +56,7 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
         for (int i = 0; i < 50; i++) {
             data.add(i + "");
         }
-        EasyAdapter<String> adapter = new EasyAdapter<String>(data, android.R.layout.simple_list_item_1) {
+        CommonAdapter adapter = new CommonAdapter<String>(android.R.layout.simple_list_item_1, data) {
             @Override
             protected void bind(@NonNull ViewHolder holder, @NonNull String s, int position) {
                 holder.setText(android.R.id.text1, "长按我试试 - " + position);
@@ -62,7 +68,7 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
                         builder.asAttachList(new String[]{"置顶", "编辑", "删除"}, null,0,10, new OnSelectListener() {
                             @Override
                             public void onSelect(int position, String text) {
-                                toast(text);
+                                ToastUtils.showShort(text);
                             }
                         }).show();
                         return true;
@@ -77,27 +83,9 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
             }
         });
         recyclerView.setAdapter(adapter);
+
     }
 
-    private void showPartShadow(final View v){
-//        if(popupView!=null && popupView.isShow())return;
-        popupView = (CustomPartShadowPopupView) new XPopup.Builder(getContext())
-                .atView(v)
-//                .dismissOnTouchOutside(false)
-                .setPopupCallback(new XPopupCallback() {
-                    @Override
-                    public void onShow() {
-                        toast("显示了");
-                    }
-                    @Override
-                    public void onDismiss() {
-                        popupView = null;
-//                        showPartShadow(v);
-                    }
-                })
-                .asCustom(new CustomPartShadowPopupView(getContext()));
-        popupView.show();
-    }
 
     @Override
     public void onClick(View v) {
@@ -105,9 +93,23 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
             case R.id.tv_all:
             case R.id.tv_price:
             case R.id.tv_sales:
-                if(popupView==null){}
-                showPartShadow(v);
-
+                if(popupView==null){
+                    popupView = (CustomPartShadowPopupView) new XPopup.Builder(getContext())
+                            .atView(v)
+                            .setPopupCallback(new XPopupCallback() {
+                                @Override
+                                public void onShow() {
+                                    Toast.makeText(getActivity(), "显示了", Toast.LENGTH_SHORT).show();
+                                }
+                                @Override
+                                public void onDismiss() {
+                                    Toast.makeText(getActivity(), "关闭了", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .asCustom(new CustomPartShadowPopupView(getContext()));
+                }
+                popupView.toggle();
+                Log.e("tag", "popupView status: "+popupView.popupStatus);
                 break;
             case R.id.tv_filter:
                 new XPopup.Builder(getContext())

@@ -3,10 +3,10 @@ package com.lxj.xpopupdemo.custom;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Toast;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.lxj.xpopup.core.HorizontalAttachPopupView;
 import com.lxj.xpopupdemo.R;
-import com.lxj.xpopupdemo.XPopupApp;
 
 /**
  * Description:
@@ -28,15 +28,13 @@ public class CustomAttachPopup extends HorizontalAttachPopupView {
         findViewById(R.id.tv_zan).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(XPopupApp.context, "赞", Toast.LENGTH_LONG).show();
-                dismiss();
+                ToastUtils.showShort("赞");
             }
         });
         findViewById(R.id.tv_comment).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(XPopupApp.context, "评论", Toast.LENGTH_LONG).show();
-                dismiss();
+                ToastUtils.showShort("评论");
             }
         });
     }

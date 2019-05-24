@@ -11,10 +11,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
-import com.lxj.xpopup.core.BasePopupView;
-
-import java.util.HashMap;
-
 /**
  * Description:
  * Create by dance, at 2018/12/17
@@ -23,7 +19,8 @@ public final class KeyboardUtils {
 
     private static int sDecorViewInvisibleHeightPre;
     private static ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
-    private static HashMap<View,OnSoftInputChangedListener> listenerMap = new HashMap<>();
+    private static OnSoftInputChangedListener onSoftInputChangedListener;
+
     private KeyboardUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
@@ -49,36 +46,35 @@ public final class KeyboardUtils {
      * @param activity The activity.
      * @param listener The soft input changed listener.
      */
-    public static void registerSoftInputChangedListener(final Activity activity, final BasePopupView popupView, final OnSoftInputChangedListener listener) {
+    public static void registerSoftInputChangedListener(final Activity activity, final OnSoftInputChangedListener listener) {
         final int flags = activity.getWindow().getAttributes().flags;
         if ((flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
         final FrameLayout contentView = activity.findViewById(android.R.id.content);
         sDecorViewInvisibleHeightPre = getDecorViewInvisibleHeight(activity);
-        listenerMap.put(popupView, listener);
-        ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        onSoftInputChangedListener = listener;
+        onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                if (onSoftInputChangedListener != null) {
                     int height = getDecorViewInvisibleHeight(activity);
                     if (sDecorViewInvisibleHeightPre != height) {
-                        //通知所有弹窗的监听器输入法高度变化了
-                        for (OnSoftInputChangedListener  changedListener: listenerMap.values()) {
-                            changedListener.onSoftInputChanged(height);
-                        }
+                        onSoftInputChangedListener.onSoftInputChanged(height);
                         sDecorViewInvisibleHeightPre = height;
                     }
+                }
             }
         };
         contentView.getViewTreeObserver()
                 .addOnGlobalLayoutListener(onGlobalLayoutListener);
     }
 
-    public static void removeLayoutChangeListener(View decorView, BasePopupView popupView){
+    public static void removeLayoutChangeListener(View decorView){
         View contentView = decorView.findViewById(android.R.id.content);
         contentView.getViewTreeObserver().removeGlobalOnLayoutListener(onGlobalLayoutListener);
         onGlobalLayoutListener = null;
-        listenerMap.remove(popupView);
+        onSoftInputChangedListener = null;
     }
 
     private static int getNavBarHeight() {

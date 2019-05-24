@@ -26,12 +26,13 @@ import android.view.GestureDetector;
 ;
 
 /**
- * A modified version for https://github.com/chrisbanes/PhotoView.
+ * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
+ * is accomplished
  */
 @SuppressWarnings("unused")
 public class PhotoView extends AppCompatImageView {
 
-    public PhotoViewAttacher attacher;
+    private PhotoViewAttacher attacher;
     private ScaleType pendingScaleType;
 
     public PhotoView(Context context) {
