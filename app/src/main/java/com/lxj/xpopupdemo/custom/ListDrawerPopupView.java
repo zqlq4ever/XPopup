@@ -1,25 +1,20 @@
 package com.lxj.xpopupdemo.custom;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.lxj.easyadapter.EasyAdapter;
-import com.lxj.easyadapter.MultiItemTypeAdapter;
 import com.lxj.easyadapter.ViewHolder;
-import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.DrawerPopupView;
-import com.lxj.xpopup.enums.PopupPosition;
-import com.lxj.xpopup.interfaces.OnSelectListener;
-import com.lxj.xpopup.widget.PopupDrawerLayout;
 import com.lxj.xpopupdemo.R;
 
 import java.util.ArrayList;
 
 /**
- * Description:
+ * Description: 自定义带列表的Drawer弹窗
  * Create by dance, at 2019/1/9
  */
 public class ListDrawerPopupView extends DrawerPopupView {
@@ -53,8 +48,10 @@ public class ListDrawerPopupView extends DrawerPopupView {
         findViewById(R.id.btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.remove(0);
-                commonAdapter.notifyDataSetChanged();
+//                if(data.size()==0)return;
+//                data.remove(0);
+//                commonAdapter.notifyDataSetChanged();
+                dismiss();
             }
         });
 

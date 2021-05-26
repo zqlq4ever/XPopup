@@ -1,7 +1,8 @@
 package com.lxj.xpopup.animator;
 
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
@@ -14,6 +15,8 @@ public class TranslateAnimator extends PopupAnimator {
     //动画起始坐标
     private float startTranslationX, startTranslationY;
     private int oldWidth, oldHeight;
+    private float initTranslationX, initTranslationY;
+    public boolean hasInitDefTranslation = false;
 
     public TranslateAnimator(View target, PopupAnimation popupAnimation) {
         super(target, popupAnimation);
@@ -21,57 +24,88 @@ public class TranslateAnimator extends PopupAnimator {
 
     @Override
     public void initAnimator() {
+        if(!hasInitDefTranslation){
+            initTranslationX = targetView.getTranslationX();
+            initTranslationY = targetView.getTranslationY();
+            hasInitDefTranslation = true;
+        }
         // 设置起始坐标
         applyTranslation();
         startTranslationX = targetView.getTranslationX();
         startTranslationY = targetView.getTranslationY();
+
         oldWidth = targetView.getMeasuredWidth();
         oldHeight = targetView.getMeasuredHeight();
     }
 
     private void applyTranslation() {
-        switch (popupAnimation){
+        switch (popupAnimation) {
             case TranslateFromLeft:
-                targetView.setTranslationX(- targetView.getRight());
+                targetView.setTranslationX(-targetView.getRight());
                 break;
             case TranslateFromTop:
-                targetView.setTranslationY(- targetView.getBottom());
+                targetView.setTranslationY(-targetView.getBottom());
                 break;
             case TranslateFromRight:
-                targetView.setTranslationX( ((View)targetView.getParent()).getMeasuredWidth() - targetView.getLeft());
+                targetView.setTranslationX(((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft());
                 break;
             case TranslateFromBottom:
-                targetView.setTranslationY(((View)targetView.getParent()).getMeasuredHeight() - targetView.getTop());
+                targetView.setTranslationY(((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop());
                 break;
         }
     }
 
     @Override
     public void animateShow() {
-        targetView.animate().translationX(0).translationY(0)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(XPopup.getAnimationDuration()).start();
+        ViewPropertyAnimator animator = null;
+        switch (popupAnimation) {
+            case TranslateFromLeft:
+                targetView.setTranslationX(-targetView.getRight());
+                animator = targetView.animate().translationX(initTranslationX);
+                break;
+            case TranslateFromTop:
+                targetView.setTranslationY(-targetView.getBottom());
+                animator = targetView.animate().translationY(initTranslationY);
+                break;
+            case TranslateFromRight:
+                targetView.setTranslationX(((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft());
+                animator = targetView.animate().translationX(initTranslationX);
+                break;
+            case TranslateFromBottom:
+                targetView.setTranslationY(((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop());
+                animator = targetView.animate().translationY(initTranslationY);
+                break;
+        }
+        if(animator!=null)animator.setInterpolator(new FastOutSlowInInterpolator())
+                .setDuration(XPopup.getAnimationDuration())
+                .withLayer()
+                .start();
     }
 
     @Override
     public void animateDismiss() {
-        //执行消失动画的时候，宽高可能改变了，所以需要修正动画的起始值
-        switch (popupAnimation){
+        ViewPropertyAnimator animator = null;
+        switch (popupAnimation) {
             case TranslateFromLeft:
                 startTranslationX -= targetView.getMeasuredWidth() - oldWidth;
+                animator = targetView.animate().translationX(startTranslationX);
                 break;
             case TranslateFromTop:
                 startTranslationY -= targetView.getMeasuredHeight() - oldHeight;
+                animator = targetView.animate().translationY(startTranslationY);
                 break;
             case TranslateFromRight:
                 startTranslationX += targetView.getMeasuredWidth() - oldWidth;
+                animator = targetView.animate().translationX(startTranslationX);
                 break;
             case TranslateFromBottom:
                 startTranslationY += targetView.getMeasuredHeight() - oldHeight;
+                animator = targetView.animate().translationY(startTranslationY);
                 break;
         }
-        targetView.animate().translationX(startTranslationX).translationY(startTranslationY)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(XPopup.getAnimationDuration()).start();
+        if(animator!=null)animator.setInterpolator(new FastOutSlowInInterpolator())
+                .setDuration(XPopup.getAnimationDuration())
+                .withLayer()
+                .start();
     }
 }

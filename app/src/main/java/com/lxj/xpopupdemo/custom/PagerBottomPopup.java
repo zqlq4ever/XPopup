@@ -1,24 +1,26 @@
 package com.lxj.xpopupdemo.custom;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
+import android.content.Context;;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopupdemo.R;
 
 
 /**
- * Description:
+ * Description: 自定义带有ViewPager的Bottom弹窗
  * Create by dance, at 2019/5/5
  */
 public class PagerBottomPopup extends BottomPopupView {
@@ -52,7 +54,7 @@ public class PagerBottomPopup extends BottomPopupView {
 
     @Override
     protected int getMaxHeight() {
-        return (int) (XPopupUtils.getWindowHeight(getContext())*.85f);
+        return (int) (XPopupUtils.getScreenHeight(getContext())*.85f);
     }
 
     class PAdapter extends PagerAdapter {

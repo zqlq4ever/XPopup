@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="280dp"
     android:layout_height="match_parent"
     android:background="#fff"
@@ -21,6 +21,15 @@
             android:textColor="#111"
             android:textSize="22sp" />
 
+        <EditText
+            android:hint="input something"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +47,10 @@
             android:textColor="#111"
             android:textSize="17sp" />
 
+        <EditText
+            android:hint="input something"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
@@ -61,6 +74,10 @@
             android:textColor="#111"
             android:textSize="17sp" />
 
+        <EditText
+            android:hint="input something"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <View
             android:layout_width="match_parent"
             android:layout_height="160dp"
@@ -74,11 +91,16 @@
             android:textColor="#111"
             android:textSize="17sp" />
 
+        <EditText
+            android:hint="input something"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="#7e4a9c" />
 
     </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>
 

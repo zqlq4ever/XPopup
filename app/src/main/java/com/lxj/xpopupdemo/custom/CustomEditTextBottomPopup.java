@@ -1,17 +1,18 @@
 package com.lxj.xpopupdemo.custom;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 
+import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
-import com.lxj.xpopup.util.XPopupUtils;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.lxj.xpopupdemo.R;
+import com.lxj.xpopupdemo.fragment.QuickStartDemo;
 
 /**
- * Description: 带有输入框的Bottom弹窗
+ * Description: 自定义带有输入框的Bottom弹窗
  * Create by dance, at 2019/2/27
  */
 public class CustomEditTextBottomPopup extends BottomPopupView {
@@ -32,7 +33,6 @@ public class CustomEditTextBottomPopup extends BottomPopupView {
     @Override
     protected void onShow() {
         super.onShow();
-//        Log.e("tag", "CustomEditTextBottomPopup  onShow");
         findViewById(R.id.btn_finish).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

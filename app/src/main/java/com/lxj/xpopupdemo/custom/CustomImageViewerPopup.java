@@ -1,12 +1,14 @@
 package com.lxj.xpopupdemo.custom;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+
 import com.lxj.xpopup.core.ImageViewerPopupView;
 import com.lxj.xpopupdemo.R;
 
 /**
- * Description:
+ * Description: 自定义大图浏览弹窗
  * Create by dance, at 2019/5/8
  */
 public class CustomImageViewerPopup extends ImageViewerPopupView {

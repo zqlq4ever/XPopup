@@ -1,13 +1,10 @@
 package com.lxj.xpopup.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -50,7 +47,9 @@ public class PartShadowContainer extends FrameLayout {
                     x = event.getX();
                     y = event.getY();
                     break;
+                case MotionEvent.ACTION_MOVE:
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     float dx = event.getX() - x;
                     float dy = event.getY() - y;
                     float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));

@@ -1,12 +1,10 @@
 package com.lxj.xpopup.core;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.lxj.xpopup.R;
+import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.animator.PopupAnimator;
 import com.lxj.xpopup.animator.ScrollScaleAnimator;
 import com.lxj.xpopup.enums.PopupAnimation;
@@ -26,32 +24,31 @@ public class HorizontalAttachPopupView extends AttachPopupView {
     @Override
     protected void initPopupContent() {
         super.initPopupContent();
-        defaultOffsetY = popupInfo.offsetY == 0 ? XPopupUtils.dp2px(getContext(), 0) : popupInfo.offsetY;
+        defaultOffsetY = popupInfo.offsetY;
         defaultOffsetX = popupInfo.offsetX == 0 ? XPopupUtils.dp2px(getContext(), 4) : popupInfo.offsetX;
-        if (!popupInfo.hasShadowBg) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                if(getPopupBackground()==null){
-                    defaultOffsetX -= bgDrawableMargin;
-                    defaultOffsetY -= bgDrawableMargin;
-                }
-            }
-        }
     }
 
     /**
      * 执行附着逻辑
      */
-    protected void doAttach() {
+    public void doAttach() {
+        final boolean isRTL = XPopupUtils.isLayoutRtl(getContext());
         float translationX = 0, translationY = 0;
         int w = getPopupContentView().getMeasuredWidth();
         int h = getPopupContentView().getMeasuredHeight();
         //0. 判断是依附于某个点还是某个View
         if (popupInfo.touchPoint != null) {
+            if(XPopup.longClickPoint!=null) popupInfo.touchPoint = XPopup.longClickPoint;
             // 依附于指定点
             isShowLeft = popupInfo.touchPoint.x > XPopupUtils.getWindowWidth(getContext()) / 2;
 
             // translationX: 在左边就和点左边对齐，在右边就和其右边对齐
-            translationX = isShowLeftToTarget() ? (popupInfo.touchPoint.x - w - defaultOffsetX) : (popupInfo.touchPoint.x + defaultOffsetX);
+            if(isRTL){
+                translationX = isShowLeft ?  -(XPopupUtils.getWindowWidth(getContext())-popupInfo.touchPoint.x+defaultOffsetX)
+                        : -(XPopupUtils.getWindowWidth(getContext())-popupInfo.touchPoint.x-getPopupContentView().getMeasuredWidth()-defaultOffsetX);
+            }else {
+                translationX = isShowLeftToTarget() ? (popupInfo.touchPoint.x - w - defaultOffsetX) : (popupInfo.touchPoint.x + defaultOffsetX);
+            }
             translationY = popupInfo.touchPoint.y - h * .5f + defaultOffsetY;
         } else {
             // 依附于指定View
@@ -64,12 +61,17 @@ public class HorizontalAttachPopupView extends AttachPopupView {
             int centerX = (rect.left + rect.right) / 2;
 
             isShowLeft = centerX > XPopupUtils.getWindowWidth(getContext()) / 2;
-
-            translationX = isShowLeftToTarget() ? (rect.left - w - defaultOffsetX) : (rect.right + defaultOffsetX);
+            if(isRTL){
+                translationX = isShowLeft ?  -(XPopupUtils.getWindowWidth(getContext())-rect.left + defaultOffsetX)
+                        : -(XPopupUtils.getWindowWidth(getContext())-rect.right-getPopupContentView().getMeasuredWidth()-defaultOffsetX);
+            }else {
+                translationX = isShowLeftToTarget() ? (rect.left - w - defaultOffsetX) : (rect.right + defaultOffsetX);
+            }
             translationY = rect.top + (rect.height()-h)/2 + defaultOffsetY;
         }
         getPopupContentView().setTranslationX(translationX);
         getPopupContentView().setTranslationY(translationY);
+        initAndStartAnimation();
     }
 
     private boolean isShowLeftToTarget() {

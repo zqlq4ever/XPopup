@@ -2,16 +2,16 @@ package com.lxj.xpopupdemo.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
+import androidx.annotation.NonNull;
+
 import com.lxj.xpopup.core.AttachPopupView;
-import com.lxj.xpopup.core.HorizontalAttachPopupView;
 import com.lxj.xpopupdemo.R;
 
 /**
- * Description:
+ * Description: 自定义背景的Attach弹窗
  * Create by lxj, at 2019/3/13
  */
 public class CustomAttachPopup2 extends AttachPopupView {
@@ -27,12 +27,13 @@ public class CustomAttachPopup2 extends AttachPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
-
-    }
-
-    //如果要自定义弹窗的背景，不要给布局设置背景图片，重写这个方法返回一个Drawable即可
-    @Override
-    protected Drawable getPopupBackground() {
-        return getResources().getDrawable(R.drawable.shadow_bg);
+        final TextView tv = findViewById(R.id.tv);
+        tv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                tv.setText(tv.getText() + "\n 啊哈哈哈啊哈");
+//                tv.setText("\n 啊哈哈哈啊哈");
+            }
+        });
     }
 }

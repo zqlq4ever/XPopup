@@ -1,18 +1,15 @@
 package com.lxj.xpopupdemo.custom;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import com.lxj.xpopup.impl.PartShadowPopupView;
-import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopupdemo.R;
 
 /**
- * Description:
+ * Description: 自定义局部阴影弹窗
  * Create by dance, at 2018/12/21
  */
 public class CustomPartShadowPopupView extends PartShadowPopupView {
